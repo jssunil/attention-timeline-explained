@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Attention Timeline — How Transformers Learned to Pay Less</title>
+  <meta name="description" content="An interactive, chronological visual guide to every attention mechanism in modern transformers — from Scaled Dot-Product Attention (2017) to DeepSeek's Compressed Sparse Attention (2026). Honest trade-offs, animated diagrams, and the story of how the field changed its mind." />
+  <meta property="og:title" content="The Attention Timeline — How Transformers Learned to Pay Less" />
+  <meta property="og:description" content="Interactive chronological explainer of attention mechanisms: standard attention, RoPE, ALiBi, MQA, GQA, linear attention, DeltaNet, MLA, and more." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <!-- Hero Section -->
+    <header id="hero" class="hero">
+      <div class="hero__bg"></div>
+      <div class="hero__content">
+        <p class="hero__kicker">ERA V5 · Session 8 · Interactive Explainer</p>
+        <h1 class="hero__title">The Attention Timeline</h1>
+        <p class="hero__subtitle">How Transformers Learned to Pay Less</p>
+        <p class="hero__description">
+          Vanilla attention wasn't wrong — it was <em>expensive</em>. Every mechanism that followed is someone
+          looking at that bill and trying to pay less of it. Laid out chronologically, you can watch the field
+          change its mind: first it wants exactness, then memory, then length, then memory again.
+        </p>
+        <div class="hero__scroll-cue" id="scroll-cue">
+          <span>Scroll to explore</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sticky Timeline Navigation -->
+    <nav id="timeline-nav" class="timeline-nav" aria-label="Attention mechanism timeline">
+      <div class="timeline-nav__track" id="timeline-track"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+      <!-- Era sections and cards rendered by JS -->
+    </main>
+
+    <!-- Comparison Panel -->
+    <aside id="comparison-panel" class="comparison-panel" aria-label="Compare mechanisms">
+      <div class="comparison-panel__header">
+        <h2>Compare Mechanisms</h2>
+        <button id="close-comparison" class="comparison-panel__close" aria-label="Close comparison">&times;</button>
+      </div>
+      <div class="comparison-panel__body" id="comparison-body"></div>
+    </aside>
+
+    <!-- Floating Compare Button -->
+    <button id="compare-btn" class="compare-btn" style="display:none;">
+      Compare (<span id="compare-count">0</span>)
+    </button>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+      <div class="footer__content">
+        <div class="footer__section">
+          <h3>About This Project</h3>
+          <p>Built as part of the ERA V5 Session 8 assignment. Every date has been verified against the original paper or release.</p>
+        </div>
+        <div class="footer__section">
+          <h3>The Core Insight</h3>
+          <p><em>"Every technique substitutes structure for stored parameters — buying generalization at the cost of expressiveness."</em> — Session 7</p>
+        </div>
+        <div class="footer__section">
+          <h3>Sources</h3>
+          <p>All dates verified against arXiv submissions and official releases. See each mechanism card for specific paper references.</p>
+        </div>
+        <div class="footer__bottom">
+          <p>&copy; 2026 · ERA V5 Cohort · The School of AI</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
