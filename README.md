@@ -2,7 +2,7 @@
 
 An interactive, chronological visual guide to modern attention and positional encoding mechanisms — from standard scaled dot-product attention (2017) to DeepSeek's Compressed Sparse Attention (2026).
 
-Deployed Live Link: *(Insert your deployed Vercel/Netlify link here)*
+Deployed Live Link: [http://poetic-bombolone-e90f2a.netlify.app](http://poetic-bombolone-e90f2a.netlify.app)
 
 ---
 
