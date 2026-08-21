@@ -22,7 +22,7 @@ export const ERA_NARRATIVES = {
   foundation: {
     title: 'The Foundation',
     years: '2017–2019',
-    story: `It starts with a single paper that replaces recurrence entirely. "Attention Is All You Need" introduces scaled dot-product attention with sinusoidal positional encoding — the first move in what Session 7 calls the recurring trade: <strong>substituting structure for stored parameters buys generalization and costs expressiveness</strong>.
+    story: `It starts with a single paper that replaces recurrence entirely. "Attention Is All You Need" introduces scaled dot-product attention with sinusoidal positional encoding — the first move in a recurring trade: <strong>substituting structure for stored parameters buys generalization and costs expressiveness</strong>.
 
 Learned absolute positions (GPT/BERT, 2018) swing the other way — store a row per position, gain expressiveness, but hit a hard wall at max_position. Multi-Query Attention (2019) makes the first attempt to reduce the KV cache bill by sharing key/value heads, though it takes years before anyone notices.`,
   },
@@ -51,7 +51,7 @@ Mistral 7B combines sliding windows with attention sinks in production, proving 
 
 The pattern is clear: the field wants memory back <em>and</em> length <em>and</em> quality, all at once. Each new technique is a different bet on which of the three to sacrifice least.
 
-<em>"Architecture is essentially solved. Data mixture and curriculum are where models are actually decided." — Session 5</em>`,
+<em>"Architecture is essentially solved. Data mixture and curriculum are where models are decided."</em>`,
   },
 };
 
@@ -86,7 +86,7 @@ export const mechanisms = [
     ],
     whenToUse: 'The baseline everything else is measured against. Still the right choice for short-to-medium contexts (≤8K) where quality matters more than efficiency. Used directly in most models\' attention layers.',
     relatedMechanisms: ['sinusoidal', 'mqa', 'linear-attention'],
-    keyInsight: 'Session 8 derives the KV-cache formula: 2 × layers × kv_heads × head_dim × T × batch × bytes. At 48 layers, 8 KV heads, head_dim 128, bf16, 32K context: ~6.44 GB for ONE user.',
+    keyInsight: 'The KV-cache formula is: 2 × layers × kv_heads × head_dim × T × batch × bytes. At 48 layers, 8 KV heads, head_dim 128, bf16, 32K context: ~6.44 GB for ONE user.',
   },
   {
     id: 'sinusoidal',
@@ -100,14 +100,14 @@ export const mechanisms = [
     arxiv: '1706.03762',
     era: 'foundation',
     category: 'positional',
-    problemItSolved: 'Attention treats its input as a set, not a sequence — it cannot distinguish "dog bites man" from "man bites dog" (Session 7 proved this experimentally). Position must be deliberately supplied.',
+    problemItSolved: 'Attention treats its input as a set, not a sequence — it cannot distinguish "dog bites man" from "man bites dog" (experiments prove this). Position must be deliberately supplied.',
     howItWorks: 'Uses sine and cosine functions at different frequencies to create a unique positional signature for each position. Each dimension of the encoding uses a different wavelength, creating a pattern that the model can learn to decode. No parameters needed — the encoding is a deterministic function of position.',
     formula: 'PE(pos, 2i) = sin(pos / 10000^(2i/d))\nPE(pos, 2i+1) = cos(pos / 10000^(2i/d))',
     pros: [
       'Zero learnable parameters — pure mathematical function',
       'Defined for any position (no hard wall like learned positions)',
       'Relative position information is theoretically accessible via linear transformation',
-      'The first "compute it, don\'t store it" move — Session 7\'s recurring trade',
+      'The first "compute it, don\'t store it" move — a recurring trade',
     ],
     cons: [
       'Model has never *used* the function at unseen positions — extrapolation is theoretical, not proven',
@@ -115,9 +115,9 @@ export const mechanisms = [
       'No adaptability — the encoding is fixed and can\'t learn task-specific position patterns',
       'Superseded by RoPE and ALiBi, which inject position inside attention rather than at the input',
     ],
-    whenToUse: 'Historically important but largely obsolete. Session 7\'s instructor was blunt: most public diagrams showing "positional encoding added at input" depict the obsolete method. Use RoPE or ALiBi instead.',
+    whenToUse: 'Historically important but largely obsolete. Most public diagrams showing "positional encoding added at input" depict the obsolete method. Use RoPE or ALiBi instead.',
     relatedMechanisms: ['absolute-learned', 'rope', 'alibi'],
-    keyInsight: 'The first instance of Session 7\'s recurring pattern: substituting structure (a fixed function) for stored parameters (a lookup table). Buys generalization, costs expressiveness.',
+    keyInsight: 'The first instance of a recurring pattern: substituting structure (a fixed function) for stored parameters (a lookup table). Buys generalization, costs expressiveness.',
   },
 
   // ─── 2018: Learned Positions ────────────────────────────────────
@@ -145,11 +145,11 @@ export const mechanisms = [
       'Hard wall at max_position — row 4,096 and row 4,097 have zero connection, because they are independent lookup rows',
       'Cannot extrapolate at all — positions beyond training are undefined (noise from random init) or nonexistent',
       'Same Zipfian training dynamics as token embeddings — later positions may be undertrained',
-      'Session 7: "It doesn\'t matter how much you change the learning rate, those numbers are never going to be touched"',
+      'It doesn\'t matter how much you change the learning rate, those numbers are never going to be touched',
     ],
     whenToUse: 'Legacy approach. Used in GPT-2, BERT. Fine for fixed-context models that will never need to handle sequences longer than training. Explicitly ruled out for V5\'s long-context target.',
     relatedMechanisms: ['sinusoidal', 'rope', 'alibi'],
-    keyInsight: 'Session 7 trained a live demo: a model learned positions 0–7 perfectly, then fell to chance at positions 8–15 — those rows never received gradient. The cliff is measured, not illustrated.',
+    keyInsight: 'A toy model trained on positions 0–7 perfectly falls to chance at positions 8–15 — those rows never received gradient. The cliff is measured, not illustrated.',
   },
 
   // ─── 2019: MQA ──────────────────────────────────────────────────
@@ -181,7 +181,7 @@ export const mechanisms = [
     ],
     whenToUse: 'When inference memory is the hard constraint and some quality loss is acceptable. Useful for very large-batch serving. Superseded by GQA for most applications (tunable midpoint).',
     relatedMechanisms: ['gqa', 'mla', 'scaled-dot-product'],
-    keyInsight: 'Session 8: "GQA and MQA reduce the per-token cache cost by sharing key/value heads — without removing the underlying linear growth with context."',
+    keyInsight: '"GQA and MQA reduce the per-token cache cost by sharing key/value heads — without removing the underlying linear growth with context."',
   },
 
   // ─── 2020: Sliding Window & Linear ──────────────────────────────
@@ -245,7 +245,7 @@ export const mechanisms = [
     ],
     whenToUse: 'When you need truly infinite context with bounded memory. A theoretical foundation more than a production technique — its limitations motivated the Delta Rule and DeltaNet.',
     relatedMechanisms: ['delta-rule', 'gated-deltanet', 'scaled-dot-product'],
-    keyInsight: 'Session 8: "Without softmax, the query can be factored out — letting all past key-value pairs collapse into one fixed-size running state." But a naive additive state can\'t correct old information.',
+    keyInsight: '"Without softmax, the query can be factored out — letting all past key-value pairs collapse into one fixed-size running state." But a naive additive state can\'t correct old information.',
   },
 
   // ─── 2021: Position & Delta ─────────────────────────────────────
@@ -278,7 +278,7 @@ export const mechanisms = [
     ],
     whenToUse: 'When you need a recurrent-style model with self-correcting memory. The theoretical foundation for Gated DeltaNet, which is used in production depth schedules (DDDG pattern).',
     relatedMechanisms: ['linear-attention', 'gated-deltanet'],
-    keyInsight: 'Session 8: "Instead of adding a full new value, you compute and write only the difference between what the state currently holds and what it should hold."',
+    keyInsight: '"Instead of adding a full new value, you compute and write only the difference between what the state currently holds and what it should hold."',
   },
   {
     id: 'rope',
@@ -305,11 +305,11 @@ export const mechanisms = [
     cons: [
       'A positional formula being computable at a length doesn\'t prove the model performs well there',
       'Needs scaling techniques (NTK, YaRN, DroPE) for large context extensions',
-      'Session 8: DroPE\'s 8K→256K extension is "evidence for that specific model, not proof that positional extension will always work"',
+      'DroPE\'s 8K→256K extension is "evidence for that specific model, not proof that positional extension will always work"',
     ],
-    whenToUse: 'The default choice for modern LLMs. Used by Llama 3.2, Qwen3, and virtually all state-of-the-art models. Session 7: "where the field has settled."',
+    whenToUse: 'The default choice for modern LLMs. Used by Llama 3.2, Qwen3, and virtually all state-of-the-art models — where the field has settled.',
     relatedMechanisms: ['sinusoidal', 'alibi', 'ntk-aware', 'yarn', 'drope'],
-    keyInsight: 'Session 7 maps four position families: Absolute Learned (hard wall) → Sinusoidal (defined everywhere but unproven) → RoPE (graceful degradation) → ALiBi (extrapolates by design). Each trades stored parameters for structural assumptions.',
+    keyInsight: 'Four position families: Absolute Learned (hard wall) → Sinusoidal (defined everywhere but unproven) → RoPE (graceful degradation) → ALiBi (extrapolates by design). Each trades stored parameters for structural assumptions.',
   },
   {
     id: 'alibi',
@@ -340,7 +340,7 @@ export const mechanisms = [
     ],
     whenToUse: 'When length extrapolation is the primary concern and simplicity matters. Used by BLOOM. A strong design but ultimately overtaken by RoPE + scaling techniques.',
     relatedMechanisms: ['rope', 'sinusoidal', 'absolute-learned'],
-    keyInsight: 'The most "structural" position encoding — replaces stored parameters with a simple formula. Session 7: "Extrapolates gracefully by design — the bias is defined for any distance."',
+    keyInsight: 'The most "structural" position encoding — replaces stored parameters with a simple formula. Extrapolates gracefully by design — the bias is defined for any distance.',
   },
 
   // ─── 2022: Flash Attention (Bonus) ──────────────────────────────
@@ -364,7 +364,7 @@ export const mechanisms = [
       '2-4x speedup from reduced memory IO',
       'Memory usage goes from O(T²) to O(T) — enables much longer sequences',
       'Drop-in replacement — no model changes needed',
-      'Session 5: "Flash Attention 47" — referenced as continuing to improve',
+      'Flash attention continues to improve with newer GPU architectures.',
     ],
     cons: [
       'Implementation complexity — requires careful CUDA kernel engineering',
@@ -374,7 +374,7 @@ export const mechanisms = [
     ],
     whenToUse: 'Always — if your hardware supports it. This is an implementation technique, not an architectural choice. Used by virtually every modern training framework. The reason you should separate "attention mechanism" from "attention implementation."',
     relatedMechanisms: ['scaled-dot-product'],
-    keyInsight: 'Bonus mechanism: Not in the required list, but referenced in Session 5. Shows that sometimes the biggest gains come from better implementation, not better math.',
+    keyInsight: 'Bonus mechanism: Shows that sometimes the biggest gains come from better implementation, not better math.',
     isBonus: true,
   },
 
@@ -397,7 +397,7 @@ export const mechanisms = [
     pros: [
       'Tunable trade-off — pick the right balance of quality vs. memory for your use case',
       'Can be converted from existing MHA checkpoints (uptraining, not retraining from scratch)',
-      'Session 8 example: 8 query heads sharing 2 KV heads → cache is 1/4 of standard MHA',
+      'For example: 8 query heads sharing 2 KV heads → cache is 1/4 of standard MHA',
       'Adopted by Llama 2 70B, Mistral, and many production models',
     ],
     cons: [
@@ -408,7 +408,7 @@ export const mechanisms = [
     ],
     whenToUse: 'The standard approach for production LLMs that need to balance quality and inference cost. Most large models (7B+) now use GQA with 2-8 KV groups.',
     relatedMechanisms: ['mqa', 'mla', 'scaled-dot-product'],
-    keyInsight: 'Session 8: "8 query heads sharing only 2 KV heads (GQA) cuts cache to 1/4 of standard multi-head attention (8 KV heads); sharing down to 1 KV head (MQA) cuts it to 1/8, at the greatest risk to model quality."',
+    keyInsight: '"8 query heads sharing only 2 KV heads (GQA) cuts cache to 1/4 of standard multi-head attention (8 KV heads); sharing down to 1 KV head (MQA) cuts it to 1/8, at the greatest risk to model quality."',
   },
   {
     id: 'ntk-aware',
@@ -497,7 +497,7 @@ export const mechanisms = [
       'Still requires some fine-tuning — not fully training-free',
       'Performance at the stated maximum extension isn\'t guaranteed for all tasks',
       'Adds complexity — three interacting components to tune',
-      'Session 8 caution applies: being computable at a length ≠ performing well there',
+      'A caution applies: being computable at a length ≠ performing well there',
     ],
     whenToUse: 'When you need to significantly extend an existing model\'s context window (4-32x) with minimal compute. The best RoPE-scaling method as of 2023.',
     relatedMechanisms: ['rope', 'ntk-aware', 'drope'],
@@ -534,7 +534,7 @@ export const mechanisms = [
     ],
     whenToUse: 'When serving large models where KV cache is the binding constraint. Particularly valuable for MoE models where the per-token cache (not model size) determines how many users you can serve.',
     relatedMechanisms: ['gqa', 'mqa', 'deepseek-csa'],
-    keyInsight: 'A different axis of compression than GQA: instead of reducing the NUMBER of KV heads, reduce the DIMENSIONALITY of what each head stores. The same idea as Session 7\'s factorized embeddings, applied to the KV cache.',
+    keyInsight: 'A different axis of compression than GQA: instead of reducing the NUMBER of KV heads, reduce the DIMENSIONALITY of what each head stores. The same idea as factorized embeddings, applied to the KV cache.',
   },
 
   // ─── 2025: Gated DeltaNet & DroPE ──────────────────────────────
@@ -565,9 +565,9 @@ export const mechanisms = [
       'More complex training dynamics than standard attention',
       'Best results require careful scheduling of which layers are DeltaNet vs. attention',
     ],
-    whenToUse: 'As the "cheap local layer" in a hybrid architecture. Session 8: V4\'s repeating DDDGDDDG pattern uses DeltaNet layers (D) for local/nearby relationships and sparse attention layers (G) for occasional long-range recall.',
+    whenToUse: 'As the "cheap local layer" in a hybrid architecture. A hybrid repeating DDDGDDDG pattern uses DeltaNet layers (D) for local/nearby relationships and sparse attention layers (G) for occasional long-range recall.',
     relatedMechanisms: ['delta-rule', 'linear-attention'],
-    keyInsight: 'Session 8: "Depth schedules mix fixed-state layers and sparse-attention layers within one model — trading serving memory against exact token access." The 6:2 D:G ratio means 75% of layers are cheap DeltaNet.',
+    keyInsight: '"Depth schedules mix fixed-state layers and sparse-attention layers within one model — trading serving memory against exact token access." The 6:2 D:G ratio means 75% of layers are cheap DeltaNet.',
   },
   {
     id: 'drope',
@@ -591,7 +591,7 @@ export const mechanisms = [
       'Short recalibration phase — not a full retraining',
     ],
     cons: [
-      'Session 8 caution: "evidence for that specific model, not proof that positional extension will always work"',
+      'A caution applies: "evidence for that specific model, not proof that positional extension will always work"',
       'A positional formula being computable at a length ≠ the model performing well there',
       'Very new — limited validation across different model families and tasks',
       'Removes a source of inductive bias that might matter for some tasks',
@@ -599,7 +599,7 @@ export const mechanisms = [
     ],
     whenToUse: 'Context extension for existing RoPE-based models when you need a large multiplier (32x+) and can afford a short recalibration. Promising but needs more validation.',
     relatedMechanisms: ['rope', 'yarn', 'ntk-aware'],
-    keyInsight: 'Session 8: "DroPE is presented as a training-time recalibration technique that let one model (V4) claim a 32x context extension (8K→256K), with an explicit caution that a positional formula being computable at a length doesn\'t prove the model performs well there."',
+    keyInsight: '"DroPE is presented as a training-time recalibration technique that let one model claim a 32x context extension (8K→256K), with an explicit caution that a positional formula being computable at a length doesn\'t prove the model performs well there."',
   },
 
   // ─── 2026: DeepSeek CSA ─────────────────────────────────────────
@@ -633,7 +633,7 @@ export const mechanisms = [
     ],
     whenToUse: 'Very long context (100K+) where neither sliding window alone nor full attention is practical. The state-of-the-art for long-context efficiency as of 2026.',
     relatedMechanisms: ['sliding-window', 'attention-sinks', 'mla'],
-    keyInsight: 'Session 8: "Sequence compression bundles nearby tokens into block summaries, then top-k selection picks the relevant blocks. Two separate savings: reducing positions stored, and reducing positions read."',
+    keyInsight: '"Sequence compression bundles nearby tokens into block summaries, then top-k selection picks the relevant blocks. Two separate savings: reducing positions stored, and reducing positions read."',
   },
 ];
 

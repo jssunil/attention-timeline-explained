@@ -1,6 +1,6 @@
 # The Attention Timeline: How Transformers Learned to Pay Less
 
-An interactive, chronological visual guide to every attention and positional encoding mechanism covered in **ERA V5 Session 8** — from standard scaled dot-product attention (2017) to DeepSeek's Compressed Sparse Attention (2026).
+An interactive, chronological visual guide to modern attention and positional encoding mechanisms — from standard scaled dot-product attention (2017) to DeepSeek's Compressed Sparse Attention (2026).
 
 Deployed Live Link: *(Insert your deployed Vercel/Netlify link here)*
 
@@ -8,7 +8,7 @@ Deployed Live Link: *(Insert your deployed Vercel/Netlify link here)*
 
 ## The Thesis
 
-> **"Every technique in this timeline is the same trade: substituting structure for stored parameters buys generalization and costs expressiveness."** — Session 7
+> **"Every technique in this timeline is the same trade: substituting structure for stored parameters buys generalization and costs expressiveness."**
 
 Vanilla attention from the original Transformer was not mathematically wrong; it was simply computationally and memory-wise **expensive**. As context windows grew from 2K to 128K and beyond, serving these models became a major bottleneck. This timeline maps how the AI research community iterated on positional encodings, key-value cache compression, and sparsity to reduce the cost of attention.
 
